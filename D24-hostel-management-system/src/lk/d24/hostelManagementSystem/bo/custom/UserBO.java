@@ -13,4 +13,6 @@ public interface UserBO extends SuperBO {
     boolean saveUser(UserDTO userDTO);
 
     UserDTO checkUserExists(String id);
+
+    String generateNextUserId();
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
@@ -23,10 +24,8 @@
                   <Image url="@asserts/image/856f31d9f475501c7552c97dbe727319.jpg" />
                </image>
             </ImageView>
-            <JFXTextField fx:id="txtUsernameReg" layoutX="131.0" layoutY="126.0" prefHeight="25.0" prefWidth="338.0" promptText="User Name" />
-            <JFXTextField fx:id="pwPasswordReg" layoutX="131.0" layoutY="175.0" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
+            <JFXTextField fx:id="txtUsernameReg" layoutX="131.0" layoutY="126.0" onKeyReleased="#userNameRegOKR" prefHeight="25.0" prefWidth="338.0" promptText="User Name" />
             <JFXButton fx:id="btnRegister" layoutX="132.0" layoutY="306.0" prefHeight="25.0" prefWidth="135.0" styleClass="common-button" text="Register" />
-            <JFXTextField fx:id="pwConfirmPasswordReg" layoutX="131.0" layoutY="226.0" prefHeight="25.0" prefWidth="338.0" promptText="Confirm Password" />
             <Label layoutX="132.0" layoutY="84.0" text="User ID : ">
                <font>
                   <Font name="Arial Bold" size="12.0" />
@@ -38,11 +37,13 @@
                </font>
             </Label>
             <JFXButton fx:id="btnLoginOnReg" layoutX="334.0" layoutY="306.0" prefHeight="25.0" prefWidth="135.0" styleClass="common-button" text="Login" />
+            <JFXPasswordField fx:id="pwPasswordReg" layoutX="131.0" layoutY="175.0" onKeyReleased="#pwRegOKR" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
             <Label layoutX="246.0" layoutY="50.0" text="W E L C O M E">
                <font>
                   <Font name="Arial Black" size="14.0" />
                </font>
             </Label>
+            <JFXPasswordField fx:id="pwConfirmPasswordReg" layoutX="131.0" layoutY="226.0" onKeyReleased="#confirmPwOKR" prefHeight="25.0" prefWidth="338.0" promptText="Confirm Password" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="apnLogin" prefHeight="400.0" prefWidth="600.0">
@@ -53,7 +54,7 @@
                </image>
             </ImageView>
             <JFXTextField fx:id="txtUserName" layoutX="132.0" layoutY="126.0" onKeyReleased="#usernameOnKeyRls" prefHeight="25.0" prefWidth="338.0" promptText="User Name" />
-            <JFXTextField fx:id="txtPassword" layoutX="132.0" layoutY="184.0" onKeyReleased="#passwordOnKeyRls" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
+            <JFXTextField fx:id="txtPassword" layoutX="132.0" layoutY="184.0" onKeyReleased="#passwordOnKeyRls" prefHeight="25.0" prefWidth="338.0" promptText="Password" visible="false" />
             <JFXButton fx:id="btnLogin" layoutX="233.0" layoutY="270.0" prefHeight="25.0" prefWidth="135.0" styleClass="common-button" text="Login" />
             <Label fx:id="lblRegister" layoutX="241.0" layoutY="317.0" text="New User? Register Now">
                <font>
@@ -68,9 +69,14 @@
                   <Font name="Arial Black" size="14.0" />
                </font>
             </Label>
+            <JFXPasswordField fx:id="pwPassword" layoutX="131.0" layoutY="185.0" onKeyReleased="#passwordOnKeyRls" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
+            <ImageView fx:id="imgShowPw" fitHeight="17.0" fitWidth="26.0" layoutX="447.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@asserts/image/outline_visibility_black_24dp.png" />
+               </image></ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="apnWelcome" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" visible="false">
+      <AnchorPane fx:id="apnWelcome" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
          <children>
             <Label layoutX="283.0" layoutY="172.0" text="D24 " textFill="#7c7c7c">
                <font>

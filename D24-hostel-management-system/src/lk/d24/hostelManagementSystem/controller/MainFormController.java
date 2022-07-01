@@ -107,7 +107,7 @@ public class MainFormController {
     }
 
     private void setUserName() {
-//        lblUserName.setText(userDTO.getUserName());
+        lblUserName.setText(userDTO.getUserName());
     }
 
     /**

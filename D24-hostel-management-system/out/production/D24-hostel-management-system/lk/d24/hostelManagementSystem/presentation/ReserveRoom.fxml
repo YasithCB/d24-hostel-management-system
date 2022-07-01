@@ -99,7 +99,7 @@
       </Label>
       <Label fx:id="lblRegisteredDate" layoutX="493.0" layoutY="246.0" prefHeight="17.0" prefWidth="106.0" />
       <JFXTextField fx:id="txtKeyMoney" labelFloat="true" layoutX="714.0" layoutY="80.0" onKeyReleased="#paidKeyMoneyOnKeyRls" prefHeight="25.0" prefWidth="218.0" promptText="Paid Key Money (LKR)" />
-      <Pane fx:id="pnPayment" layoutX="667.0" layoutY="196.0" prefHeight="94.0" prefWidth="347.0" style="-fx-background-color: #E2E2E2;">
+      <Pane fx:id="pnPayment" layoutX="667.0" layoutY="196.0" prefHeight="94.0" prefWidth="347.0" style="-fx-background-color: #E2E2E2;" visible="false">
          <children>
             <Label layoutX="121.0" layoutY="16.0" prefHeight="17.0" prefWidth="106.0" text="Mark A Payment">
                <font>

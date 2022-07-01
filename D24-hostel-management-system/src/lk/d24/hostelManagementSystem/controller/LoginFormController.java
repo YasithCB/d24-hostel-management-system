@@ -1,12 +1,14 @@
 package lk.d24.hostelManagementSystem.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -16,6 +18,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lk.d24.hostelManagementSystem.bo.BOFactory;
 import lk.d24.hostelManagementSystem.bo.custom.UserBO;
 import lk.d24.hostelManagementSystem.dto.UserDTO;
+import lk.d24.hostelManagementSystem.util.ClearDataUtil;
 import lk.d24.hostelManagementSystem.util.NavigationUtil;
 import lk.d24.hostelManagementSystem.util.RegexUtil;
 import lombok.SneakyThrows;
@@ -35,9 +38,7 @@ public class LoginFormController {
     public AnchorPane apnWelcome;
     public AnchorPane apnReg;
     public JFXTextField txtUsernameReg;
-    public JFXTextField pwPasswordReg;
     public JFXButton btnRegister;
-    public JFXTextField pwConfirmPasswordReg;
     public Label lblUserId;
     public AnchorPane apnLogin;
     public JFXTextField txtUserName;
@@ -45,12 +46,21 @@ public class LoginFormController {
     public JFXButton btnLogin;
     public JFXButton btnLoginOnReg;
     public Label lblRegister;
+    public JFXPasswordField pwPassword;
+    public ImageView imgShowPw;
+    public JFXPasswordField pwPasswordReg;
+    public JFXPasswordField pwConfirmPasswordReg;
 
     private final UserBO userBO = (UserBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.USER);
 
     public void initialize(){
         welcomeTransition();
-//        btnLogin.setDisable(true);
+        generateId();
+        btnLogin.setDisable(true);
+
+        imgShowPw.setOnMouseClicked(event -> {
+            showPassword();
+        });
 
         btnLogin.setOnMouseClicked(event -> {
             login();
@@ -61,14 +71,36 @@ public class LoginFormController {
         lblRegister.setOnMouseClicked(event -> {
             apnReg.toFront();
             apnLogin.toBack();
+            clearData();
         });
         btnLoginOnReg.setOnMouseClicked(event -> {
             apnLogin.toFront();
+            clearData();
         });
     }
 
+    private void generateId() {
+        lblUserId.setText(userBO.generateNextUserId());
+    }
+
+    private void clearData() {
+        ClearDataUtil.clearTextFields(txtUserName,txtPassword,txtUsernameReg);
+        pwPassword.setText("");
+        pwPasswordReg.setText("");
+        pwConfirmPasswordReg.setText("");
+    }
+
+    private void showPassword() {
+        if (pwPassword.isVisible()){
+            pwPassword.setVisible(false);
+            txtPassword.setVisible(true);
+        }else {
+            pwPassword.setVisible(true);
+            txtPassword.setVisible(false);
+        }
+    }
+
     private void welcomeTransition() {
-//        apnWelcome.setDisable(false);
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1),apnWelcome);
         fadeOut.setFromValue(1);
         fadeOut.setDelay(Duration.seconds(1.3));
@@ -88,36 +120,63 @@ public class LoginFormController {
                 LocalDate.now()
         ))) {
             new Alert(Alert.AlertType.INFORMATION,"Registration Successfull!").show();
+            clearData();
         }else
             new Alert(Alert.AlertType.ERROR,"OOps! Something went wrong").show();
     }
 
     @SneakyThrows
     private void login() {
-        /*UserDTO userDTO = userBO.checkUserExists(txtUserName.getText());
-        *//*if (userDTO == null) {
+        UserDTO userDTO = userBO.checkUserExists(txtUserName.getText());
+        if (userDTO == null) {
             new Alert(Alert.AlertType.ERROR,"User not Found!").show();
         }else {
             if (userDTO.getPassword().equals(txtPassword.getText())) {
+                MainFormController.userDTO = userDTO;
                 NavigationUtil.replaceApn(apnLogin,"MainForm");
             }else
                 new Alert(Alert.AlertType.ERROR,"Password Incorrect!").show();
-        }*//*
-        MainFormController.userDTO = userDTO;*/
-        NavigationUtil.replaceApn(apnLogin,"MainForm");
+        }
+//        NavigationUtil.replaceApn(apnLogin,"MainForm");
     }
 
     public void usernameOnKeyRls(KeyEvent keyEvent) {
         RegexUtil.validate(txtUserName, btnLogin, RegexUtil.name);
         if (keyEvent.getCode() == KeyCode.ENTER && !btnLogin.isDisable()) {
-            txtPassword.requestFocus();
+            pwPassword.requestFocus();
         }
     }
 
     public void passwordOnKeyRls(KeyEvent keyEvent) throws IOException {
+        txtPassword.setText(pwPassword.getText());
         if (keyEvent.getCode() == KeyCode.ENTER) {
-            NavigationUtil.replaceApn(apnLogin,"MainForm");
+            login();
         }
     }
 
+    public void userNameRegOKR(KeyEvent keyEvent) {
+        RegexUtil.validate(txtUsernameReg, btnLoginOnReg, RegexUtil.name);
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            pwPasswordReg.requestFocus();
+        }
+    }
+
+    public void pwRegOKR(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            pwConfirmPasswordReg.requestFocus();
+        }
+    }
+
+    public void confirmPwOKR(KeyEvent keyEvent) {
+        if (!pwPasswordReg.getText().equals(pwConfirmPasswordReg.getText())){
+            btnRegister.setDisable(true);
+            pwConfirmPasswordReg.setFocusColor(Paint.valueOf("EC4451"));
+        }else {
+            btnRegister.setDisable(false);
+            pwConfirmPasswordReg.setFocusColor(Paint.valueOf("A272E9"));
+        }
+        if (keyEvent.getCode() == KeyCode.ENTER){
+            register();
+        }
+    }
 }
