@@ -31,12 +31,12 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtMonthlyRent" layoutX="49.0" layoutY="136.0" prefHeight="25.0" prefWidth="293.0" promptText="Monthly Rent (LKR)">
+      <JFXTextField fx:id="txtMonthlyRent" layoutX="49.0" layoutY="136.0" onKeyReleased="#monthlyRentOKR" prefHeight="25.0" prefWidth="293.0" promptText="Monthly Rent (LKR)">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>
       </JFXTextField>
-      <JFXTextField fx:id="txtRoomQty" layoutX="387.0" layoutY="80.0" prefHeight="25.0" prefWidth="293.0" promptText="Rooms Qty">
+      <JFXTextField fx:id="txtRoomQty" layoutX="387.0" layoutY="80.0" onKeyReleased="#roomQtyOKR" prefHeight="25.0" prefWidth="293.0" promptText="Rooms Qty">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>

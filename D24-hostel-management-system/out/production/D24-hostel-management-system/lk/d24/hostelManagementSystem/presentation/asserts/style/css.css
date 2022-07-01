@@ -1,9 +1,9 @@
 .common-button {
-    -fx-background-color: #3C3F41;
+    -fx-background-color: #742CDF;
     -fx-text-fill: #FFFFFF;
 }
 .common-button:hover{
-    -fx-background-color: #666868;
+    -fx-background-color: #8B4EE4;
     -fx-font-size: 12.2;
 }
 
@@ -11,6 +11,6 @@
     -fx-background-color: transparent;
 }
 .menu-button:hover {
-    -fx-background-color: #979797;
+    -fx-background-color: #8B4EE4;
     -fx-text-fill: #FFFFFF;
 }

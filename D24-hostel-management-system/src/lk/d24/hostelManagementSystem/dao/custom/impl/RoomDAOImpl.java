@@ -50,20 +50,14 @@ public class RoomDAOImpl implements RoomDAO {
 
     @Override
     public boolean delete(String id) {
-        try {
-            Session session = FactoryConfiguration.getInstance().getSession();
-            Transaction transaction = session.beginTransaction();
+        Session session = FactoryConfiguration.getInstance().getSession();
+        Transaction transaction = session.beginTransaction();
 
-            session.delete(id, Room.class);
+        int i = session.createQuery("DELETE FROM Room WHERE roomId = :id").setParameter("id", id).executeUpdate();
 
-            transaction.commit();
-            session.close();
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        transaction.commit();
+        session.close();
+        return i>0;
     }
 
     @Override

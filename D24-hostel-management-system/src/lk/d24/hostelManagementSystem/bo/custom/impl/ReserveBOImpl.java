@@ -7,6 +7,7 @@ import lk.d24.hostelManagementSystem.dao.DAOFactory;
 import lk.d24.hostelManagementSystem.dao.custom.ReserveDAO;
 import lk.d24.hostelManagementSystem.dto.ReserveDTO;
 import lk.d24.hostelManagementSystem.entity.Reserve;
+import lk.d24.hostelManagementSystem.presentation.tm.StudentNotPaidTM;
 
 import java.util.ArrayList;
 
@@ -69,5 +70,26 @@ public class ReserveBOImpl implements ReserveBO {
     @Override
     public int markAllAsNotPaid() {
         return reserveDAO.markAllAsNotPaid();
+    }
+
+    @Override
+    public ObservableList<StudentNotPaidTM> getStudentsNotPaidToTable() {
+        ObservableList<StudentNotPaidTM> notPaidTMS = FXCollections.observableArrayList();
+        ArrayList<Reserve> all = reserveDAO.getAll();
+        for (Reserve reserve : all) {
+            if (reserve.getIsPayForThisMonth().equals("Not Paid")){
+                notPaidTMS.add(new StudentNotPaidTM(
+                        reserve.getStudent().getStudentId(),
+                        reserve.getRoom().getRoomId(),
+                        reserve.getStudent().getName()
+                ));
+            }
+        }
+        return notPaidTMS;
+    }
+
+    @Override
+    public boolean deleteReserve(String id) {
+        return reserveDAO.delete(id);
     }
 }

@@ -88,4 +88,14 @@ public class RoomBOImpl implements RoomBO {
                 room.getDateCreated()
         );
     }
+
+    @Override
+    public int getAvailableRoomsCount() {
+        int i = 0;
+        ArrayList<Room> all = roomDAO.getAll();
+        for (Room room : all) {
+            i += room.getAvailableQty();
+        }
+        return i;
+    }
 }

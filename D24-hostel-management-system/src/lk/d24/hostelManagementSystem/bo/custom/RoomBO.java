@@ -22,4 +22,6 @@ public interface RoomBO extends SuperBO {
     boolean updateRoom(RoomDTO roomDTO);
 
     RoomDTO getSpecificRoom(String newValue);
+
+    int getAvailableRoomsCount();
 }

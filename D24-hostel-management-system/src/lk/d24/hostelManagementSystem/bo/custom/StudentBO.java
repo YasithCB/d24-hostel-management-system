@@ -3,6 +3,7 @@ package lk.d24.hostelManagementSystem.bo.custom;
 import javafx.collections.ObservableList;
 import lk.d24.hostelManagementSystem.bo.SuperBO;
 import lk.d24.hostelManagementSystem.dto.StudentDTO;
+import lk.d24.hostelManagementSystem.presentation.tm.StudentNotPaidTM;
 
 /**
  * author  Yasith C Bandara
@@ -23,4 +24,8 @@ public interface StudentBO extends SuperBO {
     boolean UpdateStudent(StudentDTO dto);
 
     StudentDTO getSpecificStudent(String newValue);
+
+    int getStudentCount();
+
+    int getStudentsCountByGender(String male);
 }

@@ -3,13 +3,17 @@ package lk.d24.hostelManagementSystem.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import lk.d24.hostelManagementSystem.bo.BOFactory;
 import lk.d24.hostelManagementSystem.bo.custom.RoomBO;
 import lk.d24.hostelManagementSystem.dto.RoomDTO;
 import lk.d24.hostelManagementSystem.util.ClearDataUtil;
+import lk.d24.hostelManagementSystem.util.RegexUtil;
 
 import java.time.LocalDate;
 
@@ -41,14 +45,23 @@ public class RoomFormController {
             saveUpdateRoom();
         });
         btnDelete.setOnMouseClicked(event -> {
-            roomBO.deleteRoom(lblRoomId.getText());
-            initialize();
+            deleteRoom();
         });
         btnNew.setOnMouseClicked(event -> {
             clearData();
             generateId();
             btnSave.setText("Save");
         });
+    }
+
+    private void deleteRoom() {
+        if (roomBO.deleteRoom(lblRoomId.getText())) {
+            new Alert(Alert.AlertType.INFORMATION, "Room Deleted!").show();
+        }else
+            new Alert(Alert.AlertType.ERROR, "Something went wrong!").show();
+
+        clearData();
+        loadTable();
     }
 
     private void clearData() {
@@ -58,30 +71,42 @@ public class RoomFormController {
     }
 
     private void saveUpdateRoom() {
-        if (btnSave.getText().equals("Save")){
-            roomBO.saveRoom(new RoomDTO(
-                    lblRoomId.getText(),
-                    cmbType.getValue(),
-                    Double.parseDouble(txtMonthlyRent.getText()),
-                    Integer.parseInt(txtRoomQty.getText()),
-                    Integer.parseInt(txtRoomQty.getText()),
-                    LocalDate.now()
-            ));
-        }else {
-            roomBO.updateRoom(new RoomDTO(
-                    lblRoomId.getText(),
-                    cmbType.getValue(),
-                    Double.parseDouble(txtMonthlyRent.getText()),
-                    Integer.parseInt(txtRoomQty.getText()),
-                    Integer.parseInt(txtRoomQty.getText()),
-                    LocalDate.now()
-            ));
-        }
+        if (!txtRoomQty.getText().equals("") && !txtMonthlyRent.getText().equals("") && cmbType.getValue() != null){
+            if (btnSave.getText().equals("Save")){
+                if (roomBO.saveRoom(new RoomDTO(
+                        lblRoomId.getText(),
+                        cmbType.getValue(),
+                        Double.parseDouble(txtMonthlyRent.getText()),
+                        Integer.parseInt(txtRoomQty.getText()),
+                        Integer.parseInt(txtRoomQty.getText()),
+                        LocalDate.now()
+                ))) {
+                    new Alert(Alert.AlertType.INFORMATION, "Room Saved!").show();
+                }else
+                    new Alert(Alert.AlertType.ERROR, "Something went wrong!").show();
+
+            }else {
+                if (roomBO.updateRoom(new RoomDTO(
+                        lblRoomId.getText(),
+                        cmbType.getValue(),
+                        Double.parseDouble(txtMonthlyRent.getText()),
+                        Integer.parseInt(txtRoomQty.getText()),
+                        Integer.parseInt(txtRoomQty.getText()),
+                        LocalDate.now()
+                ))) {
+                    new Alert(Alert.AlertType.INFORMATION, "Room Updated!").show();
+                }else
+                    new Alert(Alert.AlertType.ERROR, "Something went wrong!").show();
+            }
+        }else
+            new Alert(Alert.AlertType.ERROR,"Fill all required data!").show();
+
         initialize();
         clearData();
     }
 
     private void autoFillData() {
+        btnDelete.setDisable(true);
         tblRoom.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null){
                 btnDelete.setDisable(false);
@@ -118,5 +143,17 @@ public class RoomFormController {
 
     private void generateId() {
         lblRoomId.setText(roomBO.generateNextRoomId());
+    }
+
+    public void monthlyRentOKR(KeyEvent keyEvent) {
+        RegexUtil.validate(txtMonthlyRent, btnSave, RegexUtil.price);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnSave.isDisable())
+            txtRoomQty.requestFocus();
+    }
+
+    public void roomQtyOKR(KeyEvent keyEvent) {
+        RegexUtil.validate(txtRoomQty, btnSave, RegexUtil.qty);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnSave.isDisable())
+            saveUpdateRoom();
     }
 }

@@ -51,11 +51,11 @@ public class StudentDAOImpl implements StudentDAO {
         Session session = FactoryConfiguration.getInstance().getSession();
         Transaction transaction = session.beginTransaction();
 
-        boolean b = session.createQuery("DELETE FROM Student WHERE studentId = :id").setParameter("id", id).executeUpdate() > 0;
+        int i = session.createQuery("DELETE FROM Student WHERE studentId = :id").setParameter("id", id).executeUpdate();
 
         transaction.commit();
         session.close();
-        return b;
+        return i>0;
     }
 
     @Override

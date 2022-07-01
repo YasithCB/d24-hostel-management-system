@@ -6,10 +6,13 @@ import com.jfoenix.controls.JFXRadioButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import lk.d24.hostelManagementSystem.bo.BOFactory;
 import lk.d24.hostelManagementSystem.bo.custom.StudentBO;
 import lk.d24.hostelManagementSystem.dto.StudentDTO;
 import lk.d24.hostelManagementSystem.util.ClearDataUtil;
+import lk.d24.hostelManagementSystem.util.RegexUtil;
 
 import java.time.LocalDate;
 
@@ -53,6 +56,7 @@ public class StudentFormController {
     }
 
     private void autoFillData() {
+        btnDelete.setDisable(true);
         tblStudent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null){
                 btnDelete.setDisable(false);
@@ -74,44 +78,48 @@ public class StudentFormController {
     }
 
     private void deleteStudent() {
-        if (studentBO.deleteStudent("S001")) {
-            new Alert(Alert.AlertType.INFORMATION,"Deleted!").show();
-            initialize();
+        if (studentBO.deleteStudent(lblStudentId.getText())) {
+            new Alert(Alert.AlertType.INFORMATION,"Student Deleted!").show();
         }else
-            new Alert(Alert.AlertType.ERROR,"Oops!").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
+
+        loadTable();
+        clearData();
     }
 
     private void saveUpdateStudent() {
-        if (btnSave.getText().equals("Save")) {
-            if (studentBO.saveStudent(new StudentDTO(
-                    lblStudentId.getText(),
-                    txtName.getText(),
-                    txtAddress.getText(),
-                    txtContact.getText(),
-                    txtDob.getValue(),
-                    ((RadioButton) gender.getSelectedToggle()).getText(),
+        if (!txtName.getText().equals("") && !txtAddress.getText().equals("") && !txtContact.getText().equals("") && txtDob.getValue() != null){
+            if (btnSave.getText().equals("Save")) {
+                if (studentBO.saveStudent(new StudentDTO(
+                        lblStudentId.getText(),
+                        txtName.getText(),
+                        txtAddress.getText(),
+                        txtContact.getText(),
+                        txtDob.getValue(),
+                        ((RadioButton) gender.getSelectedToggle()).getText(),
 
-                    LocalDate.now()
-            ))) {
-                new Alert(Alert.AlertType.INFORMATION,"Student Saved!").show();
-                initialize();
-            }else
-                new Alert(Alert.AlertType.ERROR,"Something Went Wrong!").show();
-        } else {
-            if (studentBO.UpdateStudent(new StudentDTO(
-                    lblStudentId.getText(),
-                    txtName.getText(),
-                    txtAddress.getText(),
-                    txtContact.getText(),
-                    txtDob.getValue(),
-                    ((RadioButton) gender.getSelectedToggle()).getText(),
-                    LocalDate.now()
-            ))) {
-                new Alert(Alert.AlertType.INFORMATION, "Student Updated!").show();
-                initialize();
-            } else
-                new Alert(Alert.AlertType.ERROR, "Something Went Wrong!").show();
-        }
+                        LocalDate.now()
+                ))) {
+                    new Alert(Alert.AlertType.INFORMATION,"Student Saved!").show();
+                }else
+                    new Alert(Alert.AlertType.ERROR,"Something Went Wrong!").show();
+            } else {
+                if (studentBO.UpdateStudent(new StudentDTO(
+                        lblStudentId.getText(),
+                        txtName.getText(),
+                        txtAddress.getText(),
+                        txtContact.getText(),
+                        txtDob.getValue(),
+                        ((RadioButton) gender.getSelectedToggle()).getText(),
+                        LocalDate.now()
+                ))) {
+                    new Alert(Alert.AlertType.INFORMATION, "Student Updated!").show();
+                } else
+                    new Alert(Alert.AlertType.ERROR, "Something Went Wrong!").show();
+            }
+        }else
+            new Alert(Alert.AlertType.ERROR,"Fill all required data!").show();
+
         initialize();
         clearData();
 
@@ -120,6 +128,7 @@ public class StudentFormController {
     private void clearData() {
         ClearDataUtil.clearTextFields(txtAddress,txtName,txtContact);
         tblStudent.getSelectionModel().clearSelection();
+        txtDob.getEditor().clear();
     }
 
     private void loadTable() {
@@ -137,5 +146,23 @@ public class StudentFormController {
 
     private void generateId() {
         lblStudentId.setText(studentBO.generateNextStudentId());
+    }
+
+    public void nameOKR(KeyEvent keyEvent) {
+        RegexUtil.validate(txtName, btnSave, RegexUtil.name);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnSave.isDisable())
+            txtAddress.requestFocus();
+    }
+
+    public void addressOKR(KeyEvent keyEvent) {
+        RegexUtil.validate(txtAddress, btnSave, RegexUtil.address);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnSave.isDisable())
+            txtContact.requestFocus();
+    }
+
+    public void contactOKR(KeyEvent keyEvent) {
+        RegexUtil.validate(txtContact, btnSave, RegexUtil.contact);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnSave.isDisable())
+            txtDob.requestFocus();
     }
 }

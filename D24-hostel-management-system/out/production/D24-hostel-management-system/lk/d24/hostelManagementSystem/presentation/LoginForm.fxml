@@ -2,13 +2,14 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="apnMain" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.d24.hostelManagementSystem.controller.LoginFormController">
+<AnchorPane fx:id="apnMain" prefHeight="400.0" prefWidth="600.0" stylesheets="@asserts/style/css.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.d24.hostelManagementSystem.controller.LoginFormController">
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true">
          <image>
@@ -24,7 +25,7 @@
             </ImageView>
             <JFXTextField fx:id="txtUsernameReg" layoutX="131.0" layoutY="126.0" prefHeight="25.0" prefWidth="338.0" promptText="User Name" />
             <JFXTextField fx:id="pwPasswordReg" layoutX="131.0" layoutY="175.0" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
-            <JFXButton fx:id="btnRegister" layoutX="132.0" layoutY="306.0" prefHeight="25.0" prefWidth="135.0" text="Register" />
+            <JFXButton fx:id="btnRegister" layoutX="132.0" layoutY="306.0" prefHeight="25.0" prefWidth="135.0" styleClass="common-button" text="Register" />
             <JFXTextField fx:id="pwConfirmPasswordReg" layoutX="131.0" layoutY="226.0" prefHeight="25.0" prefWidth="338.0" promptText="Confirm Password" />
             <Label layoutX="132.0" layoutY="84.0" text="User ID : ">
                <font>
@@ -36,7 +37,7 @@
                   <Font name="Arial Bold" size="12.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btnLoginOnReg" layoutX="334.0" layoutY="306.0" prefHeight="25.0" prefWidth="135.0" text="Login" />
+            <JFXButton fx:id="btnLoginOnReg" layoutX="334.0" layoutY="306.0" prefHeight="25.0" prefWidth="135.0" styleClass="common-button" text="Login" />
             <Label layoutX="246.0" layoutY="50.0" text="W E L C O M E">
                <font>
                   <Font name="Arial Black" size="14.0" />
@@ -51,13 +52,16 @@
                   <Image url="@asserts/image/856f31d9f475501c7552c97dbe727319.jpg" />
                </image>
             </ImageView>
-            <JFXTextField fx:id="txtUserName" layoutX="132.0" layoutY="126.0" prefHeight="25.0" prefWidth="338.0" promptText="User Name" />
-            <JFXTextField fx:id="txtPassword" layoutX="132.0" layoutY="184.0" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
-            <JFXButton fx:id="btnLogin" layoutX="233.0" layoutY="270.0" prefHeight="25.0" prefWidth="135.0" text="Login" />
+            <JFXTextField fx:id="txtUserName" layoutX="132.0" layoutY="126.0" onKeyReleased="#usernameOnKeyRls" prefHeight="25.0" prefWidth="338.0" promptText="User Name" />
+            <JFXTextField fx:id="txtPassword" layoutX="132.0" layoutY="184.0" onKeyReleased="#passwordOnKeyRls" prefHeight="25.0" prefWidth="338.0" promptText="Password" />
+            <JFXButton fx:id="btnLogin" layoutX="233.0" layoutY="270.0" prefHeight="25.0" prefWidth="135.0" styleClass="common-button" text="Login" />
             <Label fx:id="lblRegister" layoutX="241.0" layoutY="317.0" text="New User? Register Now">
                <font>
                   <Font size="11.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </Label>
             <Label layoutX="246.0" layoutY="50.0" text="W E L C O M E">
                <font>
@@ -66,9 +70,9 @@
             </Label>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="apnWelcome" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;">
+      <AnchorPane fx:id="apnWelcome" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" visible="false">
          <children>
-            <Label layoutX="283.0" layoutY="188.0" text="D24 " textFill="#7c7c7c">
+            <Label layoutX="283.0" layoutY="172.0" text="D24 " textFill="#7c7c7c">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>

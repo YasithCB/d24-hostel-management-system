@@ -7,6 +7,7 @@ import lk.d24.hostelManagementSystem.dao.DAOFactory;
 import lk.d24.hostelManagementSystem.dao.custom.StudentDAO;
 import lk.d24.hostelManagementSystem.dto.StudentDTO;
 import lk.d24.hostelManagementSystem.entity.Student;
+import lk.d24.hostelManagementSystem.presentation.tm.StudentNotPaidTM;
 
 import java.util.ArrayList;
 
@@ -91,5 +92,22 @@ public class StudentBOImpl implements StudentBO {
                 student.getGender(),
                 student.getDateRegistered()
         );
+    }
+
+    @Override
+    public int getStudentCount() {
+        return studentDAO.getAll().size();
+    }
+
+    @Override
+    public int getStudentsCountByGender(String gender) {
+        int i = 0;
+        ArrayList<Student> all = studentDAO.getAll();
+        for (Student student : all) {
+            if (student.getGender().equals(gender)){
+                i++;
+            }
+        }
+        return i;
     }
 }

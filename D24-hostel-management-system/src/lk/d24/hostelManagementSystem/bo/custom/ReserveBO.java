@@ -3,6 +3,7 @@ package lk.d24.hostelManagementSystem.bo.custom;
 import javafx.collections.ObservableList;
 import lk.d24.hostelManagementSystem.bo.SuperBO;
 import lk.d24.hostelManagementSystem.dto.ReserveDTO;
+import lk.d24.hostelManagementSystem.presentation.tm.StudentNotPaidTM;
 
 /**
  * author  Yasith C Bandara
@@ -20,4 +21,8 @@ public interface ReserveBO extends SuperBO {
     boolean makeMonthlyPayment(String s, double parseDouble);
 
     int markAllAsNotPaid();
+
+    ObservableList<StudentNotPaidTM> getStudentsNotPaidToTable();
+
+    boolean deleteReserve(String s);
 }

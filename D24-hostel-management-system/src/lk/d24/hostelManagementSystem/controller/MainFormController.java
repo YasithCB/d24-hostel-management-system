@@ -5,10 +5,13 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 import lk.d24.hostelManagementSystem.bo.BOFactory;
 import lk.d24.hostelManagementSystem.bo.custom.ReserveBO;
+import lk.d24.hostelManagementSystem.bo.custom.UserBO;
+import lk.d24.hostelManagementSystem.dto.UserDTO;
 import lk.d24.hostelManagementSystem.util.FactoryConfiguration;
 import lk.d24.hostelManagementSystem.util.NavigationUtil;
 import org.hibernate.Session;
@@ -33,14 +36,36 @@ public class MainFormController {
     public Label month;
     public Label day;
     public Label year;
+    public JFXButton btnDashboard;
+    public ImageView imgHome;
+    public Label lblLogout;
+    public Label lblUserName;
+    public AnchorPane apnMainForm;
 
-    private Month currentMonth;
     private final ReserveBO reserveBO = (ReserveBO) BOFactory.getInstance().getBO(BOFactory.BOTypes.RESERVE);
+
+    public static UserDTO userDTO;
 
     public void initialize(){
         loadHibernate();
         setDate();
         resetMonthlyPayments();
+        setUserName();
+
+        imgHome.setOnMouseClicked(event -> {
+            try {
+                NavigationUtil.setChildApn(apnMain,"DashboardForm");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        btnDashboard.setOnMouseClicked(event -> {
+            try {
+                NavigationUtil.setChildApn(apnMain,"DashboardForm");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         btnStudent.setOnMouseClicked(event -> {
             try {
@@ -65,6 +90,24 @@ public class MainFormController {
                 e.printStackTrace();
             }
         });
+
+        lblLogout.setOnMouseClicked(event -> {
+            try {
+                NavigationUtil.replaceApn(apnMainForm,"LoginForm");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        try {
+            NavigationUtil.setChildApn(apnMain,"DashboardForm");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUserName() {
+//        lblUserName.setText(userDTO.getUserName());
     }
 
     /**
@@ -72,8 +115,7 @@ public class MainFormController {
      * there fore it marks as "Not Paid" as for all students
      */
     private void resetMonthlyPayments() {
-        if (currentMonth != LocalDate.now().getMonth()) {
-            currentMonth = LocalDate.now().getMonth();
+        if (LocalDate.now().getDayOfMonth() == 1) {
             reserveBO.markAllAsNotPaid();
         }
     }

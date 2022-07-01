@@ -6,15 +6,23 @@ import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Paint;
 import javafx.util.Duration;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lk.d24.hostelManagementSystem.bo.BOFactory;
 import lk.d24.hostelManagementSystem.bo.custom.UserBO;
 import lk.d24.hostelManagementSystem.dto.UserDTO;
 import lk.d24.hostelManagementSystem.util.NavigationUtil;
+import lk.d24.hostelManagementSystem.util.RegexUtil;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.regex.Pattern;
 
 /**
  * author  Yasith C Bandara
@@ -42,6 +50,7 @@ public class LoginFormController {
 
     public void initialize(){
         welcomeTransition();
+//        btnLogin.setDisable(true);
 
         btnLogin.setOnMouseClicked(event -> {
             login();
@@ -86,14 +95,29 @@ public class LoginFormController {
     @SneakyThrows
     private void login() {
         /*UserDTO userDTO = userBO.checkUserExists(txtUserName.getText());
-        if (userDTO == null) {
+        *//*if (userDTO == null) {
             new Alert(Alert.AlertType.ERROR,"User not Found!").show();
         }else {
             if (userDTO.getPassword().equals(txtPassword.getText())) {
                 NavigationUtil.replaceApn(apnLogin,"MainForm");
             }else
                 new Alert(Alert.AlertType.ERROR,"Password Incorrect!").show();
-        }*/
+        }*//*
+        MainFormController.userDTO = userDTO;*/
         NavigationUtil.replaceApn(apnLogin,"MainForm");
     }
+
+    public void usernameOnKeyRls(KeyEvent keyEvent) {
+        RegexUtil.validate(txtUserName, btnLogin, RegexUtil.name);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnLogin.isDisable()) {
+            txtPassword.requestFocus();
+        }
+    }
+
+    public void passwordOnKeyRls(KeyEvent keyEvent) throws IOException {
+        if (keyEvent.getCode() == KeyCode.ENTER) {
+            NavigationUtil.replaceApn(apnLogin,"MainForm");
+        }
+    }
+
 }

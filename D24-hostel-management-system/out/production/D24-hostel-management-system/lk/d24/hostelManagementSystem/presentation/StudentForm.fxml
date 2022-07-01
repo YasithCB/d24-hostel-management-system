@@ -34,17 +34,17 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <JFXTextField fx:id="txtName" layoutX="49.0" layoutY="80.0" prefHeight="25.0" prefWidth="293.0" promptText="Name">
+      <JFXTextField fx:id="txtName" layoutX="49.0" layoutY="80.0" onKeyReleased="#nameOKR" prefHeight="25.0" prefWidth="293.0" promptText="Name">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>
       </JFXTextField>
-      <JFXTextField fx:id="txtAddress" layoutX="49.0" layoutY="136.0" prefHeight="25.0" prefWidth="293.0" promptText="Address">
+      <JFXTextField fx:id="txtAddress" layoutX="49.0" layoutY="136.0" onKeyReleased="#addressOKR" prefHeight="25.0" prefWidth="293.0" promptText="Address">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>
       </JFXTextField>
-      <JFXTextField fx:id="txtContact" layoutX="387.0" layoutY="80.0" prefHeight="25.0" prefWidth="293.0" promptText="Contact">
+      <JFXTextField fx:id="txtContact" layoutX="387.0" layoutY="80.0" onKeyReleased="#contactOKR" prefHeight="25.0" prefWidth="293.0" promptText="Contact">
          <font>
             <Font name="System Italic" size="12.0" />
          </font>

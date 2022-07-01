@@ -4,9 +4,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import lk.d24.hostelManagementSystem.bo.BOFactory;
 import lk.d24.hostelManagementSystem.bo.custom.ReserveBO;
@@ -18,6 +21,7 @@ import lk.d24.hostelManagementSystem.dto.StudentDTO;
 import lk.d24.hostelManagementSystem.entity.Room;
 import lk.d24.hostelManagementSystem.entity.Student;
 import lk.d24.hostelManagementSystem.util.ClearDataUtil;
+import lk.d24.hostelManagementSystem.util.RegexUtil;
 
 import java.time.LocalDate;
 
@@ -68,7 +72,7 @@ public class ReserveRoomController {
             saveUpdateReserve();
         });
         btnDelete.setOnMouseClicked(event -> {
-            //delete
+            deleteReserve();
         });
         btnNew.setOnMouseClicked(event -> {
             clearData();
@@ -78,8 +82,26 @@ public class ReserveRoomController {
         });
     }
 
+    private void deleteReserve() {
+        if (reserveBO.deleteReserve(cmbRoomId.getValue()+"-"+cmbStudentId.getValue())) {
+            new Alert(Alert.AlertType.INFORMATION,"Reservation Deleted!").show();
+        }else
+            new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
+
+        clearData();
+        loadTable();
+    }
+
     private void makePayment() {
-        reserveBO.makeMonthlyPayment(selectedRoom.getRoomId()+"-"+selectedStudent.getStudentId(), Double.parseDouble(txtRentPay.getText()));
+        if (!txtRentPay.getText().equals("")){
+            if (reserveBO.makeMonthlyPayment(selectedRoom.getRoomId()+"-"+selectedStudent.getStudentId(), Double.parseDouble(txtRentPay.getText()))) {
+                new Alert(Alert.AlertType.INFORMATION,"Payment Success!").show();
+            }else
+                new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
+        }else
+            new Alert(Alert.AlertType.ERROR,"Enter a value to pay!").show();
+
+        clearData();
         loadTable();
     }
 
@@ -123,25 +145,34 @@ public class ReserveRoomController {
     }
 
     private void saveUpdateReserve() {
-        if (btnSave.getText().equals("Reserve")){
-            reserveBO.saveReserve(new ReserveDTO(
-                    new Room(selectedRoom.getRoomId(), selectedRoom.getType(), selectedRoom.getMonthlyRental(), selectedRoom.getRoomsQty(), selectedRoom.getAvailableQty(), selectedRoom.getDateCreated(), null),
-                    new Student(selectedStudent.getStudentId(), selectedStudent.getName(), selectedStudent.getAddress(), selectedStudent.getContact(), selectedStudent.getDob(), selectedStudent.getGender(), selectedStudent.getDateRegistered(), null),
-                    LocalDate.now(),
-                    Double.parseDouble(txtKeyMoney.getText()),
-                    0,
-                    "Not Paid"
-            ));
-        }else {
-            reserveBO.updateReserve(new ReserveDTO(
-                    new Room(selectedRoom.getRoomId(), selectedRoom.getType(), selectedRoom.getMonthlyRental(), selectedRoom.getRoomsQty(), selectedRoom.getAvailableQty(), selectedRoom.getDateCreated(), null),
-                    new Student(selectedStudent.getStudentId(), selectedStudent.getName(), selectedStudent.getAddress(), selectedStudent.getContact(), selectedStudent.getDob(), selectedStudent.getGender(), selectedStudent.getDateRegistered(), null),
-                    LocalDate.now(),
-                    Double.parseDouble(txtKeyMoney.getText()),
-                    0,
-                    "Not Paid"
-            ));
-        }
+        if (cmbRoomId.getValue() != null & cmbStudentId.getValue() != null && !txtKeyMoney.getText().equals("")){
+            if (btnSave.getText().equals("Reserve")){
+                if (reserveBO.saveReserve(new ReserveDTO(
+                        new Room(selectedRoom.getRoomId(), selectedRoom.getType(), selectedRoom.getMonthlyRental(), selectedRoom.getRoomsQty(), selectedRoom.getAvailableQty(), selectedRoom.getDateCreated(), null),
+                        new Student(selectedStudent.getStudentId(), selectedStudent.getName(), selectedStudent.getAddress(), selectedStudent.getContact(), selectedStudent.getDob(), selectedStudent.getGender(), selectedStudent.getDateRegistered(), null),
+                        LocalDate.now(),
+                        Double.parseDouble(txtKeyMoney.getText()),
+                        0,
+                        "Not Paid"
+                ))) {
+                    new Alert(Alert.AlertType.INFORMATION,"Room Reserved!").show();
+                }else
+                    new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
+            }else {
+                if (reserveBO.updateReserve(new ReserveDTO(
+                        new Room(selectedRoom.getRoomId(), selectedRoom.getType(), selectedRoom.getMonthlyRental(), selectedRoom.getRoomsQty(), selectedRoom.getAvailableQty(), selectedRoom.getDateCreated(), null),
+                        new Student(selectedStudent.getStudentId(), selectedStudent.getName(), selectedStudent.getAddress(), selectedStudent.getContact(), selectedStudent.getDob(), selectedStudent.getGender(), selectedStudent.getDateRegistered(), null),
+                        LocalDate.now(),
+                        Double.parseDouble(txtKeyMoney.getText()),
+                        0,
+                        "Not Paid"
+                ))) {
+                    new Alert(Alert.AlertType.INFORMATION,"Reservation Updated!").show();
+                }else
+                    new Alert(Alert.AlertType.ERROR,"Something went wrong!").show();
+            }
+        }else
+            new Alert(Alert.AlertType.ERROR,"Fill all required data!").show();
 
         loadTable();
         clearData();
@@ -159,14 +190,18 @@ public class ReserveRoomController {
             if (newValue != null){
                 selectedRoom = roomBO.getSpecificRoom(newValue);
                 setRoomLabels();
-            }
+                btnSave.setDisable(false);
+            }else
+                btnSave.setDisable(true);
         });
 
         cmbStudentId.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null){
                 selectedStudent = studentBO.getSpecificStudent(newValue);
                 setStudentLabels();
-            }
+                btnSave.setDisable(false);
+            }else
+                btnSave.setDisable(true);
         });
     }
 
@@ -207,6 +242,20 @@ public class ReserveRoomController {
         ObservableList<StudentDTO> allStudents = studentBO.getAllStudents();
         for (StudentDTO student : allStudents) {
             cmbStudentId.getItems().add(student.getStudentId());
+        }
+    }
+
+    public void paidKeyMoneyOnKeyRls(KeyEvent keyEvent) {
+        RegexUtil.validate(txtKeyMoney, btnSave, RegexUtil.price);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnSave.isDisable()){
+            saveUpdateReserve();
+        }
+    }
+
+    public void paidValueOnKeyRls(KeyEvent keyEvent) {
+        RegexUtil.validate(txtRentPay, btnPaid, RegexUtil.price);
+        if (keyEvent.getCode() == KeyCode.ENTER && !btnPaid.isDisable()) {
+            makePayment();
         }
     }
 }

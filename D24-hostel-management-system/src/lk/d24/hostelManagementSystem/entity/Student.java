@@ -32,7 +32,7 @@ public class Student {
     private String gender;
     private LocalDate dateRegistered;
 
-    @OneToMany (mappedBy = "student", fetch = FetchType.EAGER)
+    @OneToMany (mappedBy = "student", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Reserve> reserveList = new ArrayList<>();
 
     public Student(String studentId, String name, String address, String contact, LocalDate dob, String gender, LocalDate dateRegistered) {

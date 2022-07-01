@@ -31,7 +31,7 @@ public class Room {
     private int availableQty;
     private LocalDate dateCreated;
 
-    @OneToMany (mappedBy = "room",fetch = FetchType.EAGER)
+    @OneToMany (mappedBy = "room",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Reserve> reserveList = new ArrayList<>();
 
     public Room(String roomId, String type, double monthlyRental, int roomsQty, int availableQty, LocalDate dateCreated) {
