@@ -7,12 +7,15 @@
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import lk.d24.hostelManagementSystem.util.FactoryConfiguration;
 import org.hibernate.Session;
 
+import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class AppInitializer extends Application {
@@ -23,9 +26,15 @@ public class AppInitializer extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setScene(new Scene(FXMLLoader.load(getClass().getResource("lk/d24/hostelManagementSystem/presentation/LoginForm.fxml"))));
+        Parent root = FXMLLoader.load(getClass().getResource("lk/d24/hostelManagementSystem/presentation/LoginForm.fxml"));
+
+        Scene scene = new Scene(root);
+
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        primaryStage.getIcons().add(new Image("https://example.com/javaicon.png"));
         primaryStage.show();
+
+
+
     }
 }
